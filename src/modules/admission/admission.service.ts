@@ -17,10 +17,6 @@ export class AdmissionService {
         const { status, url, time, new_url } = request;
         const splitName = url.split("/");
         const streamName = splitName[splitName.length - 1];
-        return {
-            allowed: true,
-            new_url: `rtmp://127.0.0.1:1935/app/TETES`
-        }
         const roomId = await this.getTokenInfo(streamName);
         const returnObj = {
             allowed: true,
