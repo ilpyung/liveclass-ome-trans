@@ -1,0 +1,35 @@
+version: 0.2
+env:
+    parameter-store:
+        REDIS_HOST: "/CodeBuild/redis_host"
+        REDIS_USER: "/CodeBuild/redis_user"
+        REDIS_AUTH: "/CodeBuild/redis_auth"
+phases:
+    install:
+        runtime-versions:
+            node: 22
+        commands:
+            # - aws sts get-caller-identity
+    pre_build:
+        commands:
+            # ECR Login
+            - echo Start pre build
+            - export IMAGE_MAGER_V=2
+            - export IMAGE_MINOR_V=0
+            - export IMAGE_TAG=$IMAGE_MAGER_V.$IMAGE_MINOR_V.$CODEBUILD_BUILD_NUMBER
+            - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin "$(aws sts get-caller-identity --query Account --output text).dkr.ecr.ap-northeast-2.amazonaws.com"
+    build:
+        commands:
+            - sed -i.bak 's#@REDIS_HOST@#'"$REDIS_HOST"'#' .env.prd
+            - sed -i.bak 's#@REDIS_USER@#'"$REDIS_USER"'#' .env.prd
+            - sed -i.bak 's#@REDIS_AUTH@#'"$REDIS_AUTH"'#' .env.prd
+
+            - export IMAGE_FULL_NAME=$IMAGE_REPO_URI/$IMAGE_REPO_NAME:$IMAGE_TAG
+            - docker build -t $IMAGE_REPO_URI/$IMAGE_REPO_NAME:latest .
+            - docker tag $IMAGE_REPO_URI/$IMAGE_REPO_NAME:latest $IMAGE_FULL_NAME
+            - docker push $IMAGE_REPO_URI/$IMAGE_REPO_NAME:latest
+            - docker push $IMAGE_FULL_NAME
+
+    post_build:
+        commands:
+            - echo Complete build process
