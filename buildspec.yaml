@@ -7,7 +7,7 @@ env:
 phases:
     install:
         runtime-versions:
-            node: 22
+            nodejs: 22
         commands:
             # - aws sts get-caller-identity
     pre_build:
