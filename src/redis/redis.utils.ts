@@ -12,9 +12,9 @@ export function createRedis(options: RedisOptions) {
     const config = {
         host: options.host,
         port: options.port,
-        username: options.username,
-        password: options.password,
-        tls: {},
+        // username: options.username,
+        // password: options.password,
+        // tls: {},
         commandTimeout: 10000,
     };
     return new Redis(config);
