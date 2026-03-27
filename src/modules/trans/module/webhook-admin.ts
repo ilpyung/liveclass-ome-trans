@@ -92,7 +92,7 @@ export class WebhookAdminModule {
             },
             {
                 name: "aac_audio",
-                codec: "opus",
+                codec: "aac",
                 bitrate,
                 samplerate: sample,
                 channel,
