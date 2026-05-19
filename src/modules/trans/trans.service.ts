@@ -23,7 +23,9 @@ export class TransService {
     ) {}
 
     async transWebhook(res: Response, body: any[], streamName: string) {
+        console.log(`----${streamName}----`)
         console.log(body);
+        console.log(`------------`)
         res.setHeader("Content-Type", "application/json");
         let videoBitrate = 0,
             videoFrame = 0,
